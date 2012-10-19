@@ -1,0 +1,55 @@
+body {
+    font-family:"Trebuchet MS", Tahoma, Verdana, sans-serif;
+    padding:0;
+    margin:0;
+    background:#fefefe;
+    font-size:12px;
+}
+body * {
+    font-family:"Trebuchet MS", Tahoma, Verdana, sans-serif;
+}
+a img {
+    border:none;
+}
+a {
+    color:#0066B3;
+}
+a:hover {
+    color:#FF3300;
+}
+.floatBox {
+    margin:0.5em;
+    border:2px solid #BBBBBB;
+    min-width:200px;
+    float:left;
+    background-color:white;
+}
+.floatBoxContent {
+    padding:0 5px 5px;
+}
+.floatBoxHeader {
+    margin:0 0 6px;
+    min-width:200px;
+    padding:3px 0;
+    border-bottom:1px solid #BBBBBB;
+    color:#444;
+    background:#DDD;
+    cursor:move;
+}
+.floatBoxHeader img.toggle {
+    vertical-align:bottom;
+    cursor:pointer;
+}
+button.button {
+    background-color:#EFEFEF;
+    border:1px solid #AAA;
+    padding-top:1px;
+    padding-bottom:1px;
+}
+button.button img {
+    vertical-align:top;
+}
+
+img.button {
+    cursor:pointer;
+}

@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+
+    RewriteEngine On
+    
+    ##Junk any requests to core files    
+    RewriteCond %{REQUEST_URI} ^/controllers.*|^/lib.*|^/views.*
+    RewriteRule ^.*$ / [forbidden,last]
+        
+    ##Filter out any requests to these directories. This is in case the server 
+    ## is spammed with a bunch of simultaneous non-existing image requests   
+    RewriteCond %{REQUEST_URI} !^/img/.*|^/css/.*|^/js/.*|^/files/.*
+    ##Do not rewrite a URI to a real directory
+    RewriteCond %{REQUEST_FILENAME} !-d
+    ##Ditto for files
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php?url=$1 [qsappend,last]
+
+</IfModule>
