@@ -29,7 +29,6 @@ class Controller
      */
     public function __construct()
     {
-        $this->mpc = new mpc();
         $this->View = new View($this);
     }
 
@@ -38,6 +37,9 @@ class Controller
         $this->setView();
     }
 
+    /**
+     * Ajax method to save a name/key to the current session
+     */
     public function saveSetting()
     {
         $this->setAjax();
@@ -46,18 +48,6 @@ class Controller
         foreach($params as $key=>$value) {
             $_SESSION[$name][$key] = $value;
         }
-    }
-
-    public function resetPositions()
-    {
-        $this->setAjax();
-        foreach($_SESSION as $key=>$value) 
-        {
-            if (substr($key, -3) === 'Pos') {
-                unset($_SESSION[$key]);
-            }
-        }        
-        $this->notice('Positions reset');
     }
 
     protected function setView($view = null, $layout = null)
@@ -72,17 +62,28 @@ class Controller
         $this->View->layoutFile = $layout;
     }
 
-    protected function setAjax($viewFile = 'blank')
+    /**
+     * Sets the response to be ajax
+     * @param string $viewFile
+     * @param string $contentType
+     */
+    protected function setAjax($viewFile = 'blank', $contentType = 'application/json')
     {
         $this->View->viewFile = $viewFile;
         $this->View->layoutFile = 'ajax';
+        header(sprintf("Content-Type: %s; charset=%s", $contentType, Dispatcher::$charset));
     }
 
-    protected function ajaxError($exit = true)
+    /**
+     *
+     * @param string $message
+     * @param bool $exit
+     */
+    protected function four04($message = 'Bad request.', $exit = true)
     {
         header('HTTP/1.x 404 Not Found');
         if ($exit === true) {
-            exit('Bad Ajax Request');
+            exit($message);
         }
     }
 

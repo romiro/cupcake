@@ -16,6 +16,8 @@ class Dispatcher
 {
     private static $controller;
 
+    public static $charset = 'utf-8';
+
     public static function main()
     {
         require_once('lib/functions.php');
@@ -32,20 +34,19 @@ class Dispatcher
         define('IS_AJAX', !empty($requestHeaders['X-Requested-With']) OR $requestHeaders['X-Requested-With'] == 'XMLHttpRequest' );
         define('DS', DIRECTORY_SEPARATOR);
 
-        $controller = 'Controller'; //set default controller if there is 1 or none URI frags
-        $action = 'index'; //set default action (that runs off of default controller) for empty URI
+        $controller = 'Controller'; //set default controller if there is 1 or none URL frags
+        $action = 'index'; //set default action (that runs off of default controller) for empty URL
 
         if (!empty($_GET['url'])) //parse the URL for pieces
         {
             $params = explode("/", $_GET['url']); //turn URL into an array
 
-            if (count($params) == 1 || $params[1] == '') { //both of these check for URIs with one frag
-              //it's just going to be running an action off the default Controller...
-                $action = preg_replace('/[^a-zA-Z0-9]/', '', $params[0]);
+            if (count($params) == 1 || $params[1] == '') { //both of these check for URLs with one frag
+                $action = preg_replace('/[^a-zA-Z0-9-_]/', '', $params[0]);
             }
             else {
-                $controller = ucwords(preg_replace('/[^a-zA-Z0-9]/', '', $params[0])) . "Controller";
-                $action = preg_replace('/[^a-zA-Z0-9]/', '', $params[1]);
+                $controller = ucwords(preg_replace('/[^a-zA-Z0-9-_]/', '', $params[0])) . "Controller";
+                $action = preg_replace('/[^a-zA-Z0-9-_]/', '', $params[1]);
 
                 $actionArguments = null;
                 if (count($params) > 2) {
@@ -65,18 +66,18 @@ class Dispatcher
       //create internally usable, externally inaccessible public class methods by prefacing the method with an underscore
       //this is the "externally inaccessible" part being implemented:
         if (substr($action, 0, 1) == '_') {
-            exit("Failure to load pseudo-protected controller action <b>$action</b>");
+            exit("Failure to load pseudo-protected controller action <b>$action</b>.");
         }
 
         if (!method_exists($controller, $action)) {
-            exit("Failure to load Controller action <b>$action</b>");
+            exit("Failure to load Controller action <b>$action</b>. Method does not exist.");
         }
 
       //Whatever string that $controller contains is the name of the class that is created here.
       //The new object is set as Dispatcher's static var $controller, via self::$controller
         self::$controller = new $controller();
 
-      //calls the Controller's action, passing any URI arguments to it
+      //calls the Controller's action, passing any URL arguments to it
         call_user_func_array(array( self::$controller, $action ), $actionArguments);
 
         self::$controller->View->render(); //renders the View which has been created by Controller's constructor method

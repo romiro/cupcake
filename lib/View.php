@@ -9,8 +9,17 @@ class View
      * @var ElementController
      */
     public $ElementController;
+
+    /**
+     * @var string Relative path of view file
+     */
     public $viewFile;
+
+    /**
+     * @var string Relative path of layout file
+     */
     public $layoutFile;
+
     public function __construct(&$controller)
     {
         $this->Controller = $controller;
@@ -25,8 +34,8 @@ class View
 
     public function render()
     {
-        $viewPath = "views/$this->viewFile.tpl";
-        $layoutPath = "views/layout_$this->layoutFile.tpl";
+        $viewPath = "views/$this->viewFile.phtml";
+        $layoutPath = "views/layout_$this->layoutFile.phtml";
         if (!is_file($viewPath)) {
             exit("Cannot find view file: $viewPath");
         }
@@ -58,7 +67,7 @@ class View
     public function runControllerMethod($method)
     {
         $method = "_$method";
-        if (!method_exists('Controller', $method)) {
+        if (!method_exists(get_class($this), $method)) {
             exit("Cannot find controller method <b>$method</b>");
         }
         $return = $this->controller->$method();
