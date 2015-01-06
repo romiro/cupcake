@@ -31,12 +31,13 @@ class Dispatcher
         $requestHeaders = apache_request_headers(); //get headers for AJAX detection
 
         define('BASEDIR', dirname(__FILE__));
-        define('IS_AJAX', !empty($requestHeaders['X-Requested-With']) OR $requestHeaders['X-Requested-With'] == 'XMLHttpRequest' );
+        define('IS_AJAX', !empty($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With'] == 'XMLHttpRequest' );
         define('DS', DIRECTORY_SEPARATOR);
 
         $controller = 'Controller'; //set default controller if there is 1 or none URL frags
         $action = 'index'; //set default action (that runs off of default controller) for empty URL
-
+        $actionArguments = array();
+        
         if (!empty($_GET['url'])) //parse the URL for pieces
         {
             $params = explode("/", $_GET['url']); //turn URL into an array
@@ -48,7 +49,7 @@ class Dispatcher
                 $controller = ucwords(preg_replace('/[^a-zA-Z0-9-_]/', '', $params[0])) . "Controller";
                 $action = preg_replace('/[^a-zA-Z0-9-_]/', '', $params[1]);
 
-                $actionArguments = null;
+
                 if (count($params) > 2) {
                     $actionArguments = array_slice($params, 2); //get an array of arguments
                 }
