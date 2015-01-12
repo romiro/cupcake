@@ -61,7 +61,8 @@ class Dispatcher
         if (!file_exists($controllerFileName)) {
             exit("Could not find controller file <b>$controllerFileName</b>");
         }
-
+        
+        require_once('controllers/Controller.php');
         require_once($controllerFileName);
 
       //create internally usable, externally inaccessible public class methods by prefacing the method with an underscore
@@ -76,7 +77,7 @@ class Dispatcher
 
       //Whatever string that $controller contains is the name of the class that is created here.
       //The new object is set as Dispatcher's static var $controller, via self::$controller
-        self::$controller = new $controller();
+        self::$controller = new $controller($controller, $action, $actionArguments);
 
       //calls the Controller's action, passing any URL arguments to it
         call_user_func_array(array( self::$controller, $action ), $actionArguments);

@@ -10,6 +10,10 @@ class Controller
     public $dbUser  = 'web';
     public $dbPass  = 'public';
 
+    public $controllerName;
+    public $actionName;
+    public $actionArguments;
+
     /**
      * Variables passed to view via extract()
      */
@@ -25,10 +29,16 @@ class Controller
     /**
      * Starts up the mpc interface object and element controller (the view's elements' logic dealie)
      *
-     * @return void
+     * @param $controllerName string
+     * @param $actionName string
+     * @param $actionArguments string
      */
-    public function __construct()
+    public function __construct($controllerName, $actionName, $actionArguments)
     {
+        $this->controllerName = $controllerName;
+        $this->actionName = $actionName;
+        $this->actionArguments = $actionArguments;
+
         $this->View = new View($this);
     }
 

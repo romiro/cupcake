@@ -18,7 +18,7 @@ class View
     /**
      * @var string Relative path of layout file
      */
-    public $layoutFile;
+    public $layoutFile = 'default';
 
     public function __construct(&$controller)
     {
@@ -34,6 +34,15 @@ class View
 
     public function render()
     {
+        if (empty($this->viewFile)) {
+            if ($this->Controller->controllerName != '') {
+                $this->viewFile = sprintf('%s/%s', strtolower($this->Controller->controllerName), $this->Controller->actionName);
+            }
+            else {
+                $this->viewFile = $this->Controller->actionName;
+            }
+        }
+
         $viewPath = "views/$this->viewFile.phtml";
         $layoutPath = "views/layout_$this->layoutFile.phtml";
         if (!is_file($viewPath)) {
